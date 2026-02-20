@@ -1,25 +1,37 @@
-import { Image, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { COLORS, TYPOGRAPHY } from '../styles';
 import { IMG } from '../util';
+
 const ProfileScreen = () => {
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderWidth: 3,
-        borderColor: 'blue',
-      }}
-    >
+    <View style={styles.container}>
       <Image
         source={{
           uri: IMG.LOGO,
         }}
-        style={{ width: 200, height: 200 }}
+        style={styles.image}
       />
-      <Text style={{ fontSize: 40 }}>ProfileScreen</Text>
+      <Text style={styles.title}>ProfileScreen</Text>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLORS.white,
+  },
+  image: {
+    width: 200,
+    height: 200,
+    marginBottom: 20,
+  },
+  title: {
+    ...TYPOGRAPHY.h2,
+    color: COLORS.black,
+  },
+});
 
 export default ProfileScreen;

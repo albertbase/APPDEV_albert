@@ -1,5 +1,5 @@
 {
-  "name": "BASEProject",
+  "name": "JIYOPAppDev",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -16,6 +16,7 @@
     "@react-navigation/native-stack": "^7.12.0",
     "react": "19.2.0",
     "react-native": "0.83.1",
+    "react-native-gesture-handler": "^2.30.0",
     "react-native-safe-area-context": "^5.6.2",
     "react-native-screens": "^4.23.0"
   },
