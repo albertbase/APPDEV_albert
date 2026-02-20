@@ -50,7 +50,7 @@ const Login = () => {
       <View style={styles.headerSection}>
         <View style={styles.logoContainer}>
           <Image
-            source={{ uri: IMG.LOGO2 }}
+            source={{ uri: IMG.LOGO3 }}
             style={styles.logo}
           />
         </View>

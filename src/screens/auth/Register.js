@@ -74,12 +74,12 @@ const Register = () => {
       <View style={styles.headerSection}>
         <View style={styles.logoContainer}>
           <Image
-            source={{ uri: IMG.LOGO }}
+            source={{ uri: IMG.LOGO3 }}
             style={styles.logo}
           />
         </View>
         <Text style={styles.titleText}>Create Account</Text>
-        <Text style={styles.subtitleText}>Join us and start your journey</Text>
+        <Text style={styles.subtitleText}>WAS-ZUP mga real vibe coders</Text>
       </View>
 
       <View style={styles.formContainer}>
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
     borderWidth: 2,
-    borderColor: COLORS.success,
+    borderColor: COLORS.primary,
   },
   logo: {
     width: 80,
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     ...TYPOGRAPHY.h1,
-    color: COLORS.black,
+    color: COLORS.primary,
     fontWeight: '700',
     marginBottom: 8,
   },
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   checkboxChecked: {
-    backgroundColor: COLORS.success,
+    backgroundColor: COLORS.primary,
     borderColor: COLORS.success,
   },
   checkmark: {
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   button: {
-    backgroundColor: COLORS.success,
+    backgroundColor: COLORS.primary,
     paddingVertical: 14,
     borderRadius: 8,
     marginHorizontal: 20,
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
   },
   loginLink: {
     ...TYPOGRAPHY.body,
-    color: COLORS.success,
+    color: COLORS.primary,
     fontWeight: '700',
   },
   footerContainer: {
