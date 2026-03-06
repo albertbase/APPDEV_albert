@@ -55,7 +55,7 @@ const Login = () => {
           />
         </View>
         <Text style={styles.titleText}>Welcome Back!</Text>
-        <Text style={styles.subtitleText}>Sign in sa imo account kung naa man galing</Text>
+        <Text style={styles.subtitleText}>Sign in to yourt account</Text>
       </View>
 
       <View style={styles.formContainer}>

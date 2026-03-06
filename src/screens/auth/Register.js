@@ -85,7 +85,7 @@ const Register = () => {
       <View style={styles.formContainer}>
         <CustomTextInput
           label="Full Name"
-          placeholder="John Doe"
+          placeholder="Your name here"
           value={fullName}
           onChangeText={setFullName}
           containerStyle={styles.inputContainer}
@@ -106,7 +106,7 @@ const Register = () => {
         <View style={styles.passwordContainer}>
           <CustomTextInput
             label="Password"
-            placeholder="Min. 6 characters"
+            placeholder="Password"
             value={password}
             onChangeText={setPassword}
             containerStyle={styles.inputContainer}
