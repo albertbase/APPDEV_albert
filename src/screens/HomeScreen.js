@@ -1,38 +1,35 @@
-import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { CustomButton, CustomTextInput } from '../components';
+import { useDispatch } from 'react-redux';
+import { StyleSheet, Text, View } from 'react-native';
+import { CustomButton, OfflineLogo } from '../components';
 import { COLORS, TYPOGRAPHY } from '../styles';
-import { IMG, ROUTES } from '../util';
+import { ROUTES } from '../util';
+import { authLogout } from '../app/actions';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const [inputValue, setInputValue] = useState('');
+  const dispatch = useDispatch();
+
   return (
     <View style={styles.container}>
-      <Image
-        source={{
-          uri: IMG.LOGO2,
-        }}
-        style={styles.image}
-      />
+      <OfflineLogo label="HOME" size={200} style={styles.image} />
+
       <Text style={styles.title}>HomeScreen</Text>
 
-      <CustomTextInput
-        label="Enter your name"
-        placeholder="Type here..."
-        value={inputValue}
-        onChangeText={setInputValue}
-        labelStyle={styles.label}
-        textStyle={styles.input}
-        containerStyle={styles.inputContainer}
-      />
+
 
       <CustomButton
         label="GO TO PROFILE"
         onPress={() => navigation.navigate(ROUTES.PROFILE)}
         textStyle={styles.buttonText}
         containerStyle={styles.button}
+      />
+
+      <CustomButton
+        label="LOG OUT"
+        onPress={() => dispatch(authLogout())}
+        textStyle={styles.logoutButtonText}
+        containerStyle={styles.logoutButton}
       />
     </View>
   );
@@ -50,6 +47,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     marginBottom: 20,
+    borderRadius:  100,
   },
   title: {
     ...TYPOGRAPHY.h2,
@@ -77,10 +75,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 10,
   },
   buttonText: {
     ...TYPOGRAPHY.body,
     color: COLORS.white,
+    fontWeight: '600',
+  },
+  logoutButton: {
+    backgroundColor: COLORS.lightGray,
+    borderRadius: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logoutButtonText: {
+    ...TYPOGRAPHY.body,
+    color: COLORS.black,
     fontWeight: '600',
   },
 });

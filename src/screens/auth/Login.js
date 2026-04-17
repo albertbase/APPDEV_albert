@@ -1,69 +1,84 @@
-import { useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View, Image, Dimensions } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { CustomButton, CustomTextInput } from '../../components';
+import { useEffect, useRef, useState } from 'react';
+import { Alert, Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { CustomButton, CustomTextInput, OfflineLogo, SimpleButton } from '../../components';
 import { COLORS, TYPOGRAPHY } from '../../styles';
-import { ROUTES, IMG } from '../../util';
-
-const { width } = Dimensions.get('window');
+import { authLogin } from '../../app/actions';
 
 const Login = () => {
-  const [emailAdd, setEmailAdd] = useState('');
+  const dispatch = useDispatch();
+  const auth = useSelector(state => state.auth);
+
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const navigation = useNavigation();
+  const shakeAnimation = useRef(new Animated.Value(0)).current;
 
-  const handleLogin = async () => {
-    if (emailAdd.trim() === '') {
-      Alert.alert('Validation Error', 'Please enter your email!');
-      return;
+  useEffect(() => {
+    if (!auth.isLoading && auth.isError && auth.error) {
+      Alert.alert('Login failed', auth.error);
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAdd)) {
-      Alert.alert('Invalid Email', 'Please enter a valid email address!');
-      return;
+  }, [auth.isLoading, auth.isError, auth.error]);
+
+  useEffect(() => {
+    if (auth?.data?.offlineMode) {
+      Alert.alert('Offline Mode', 'Logged in using local offline mode for device testing.');
     }
-    if (password.trim() === '') {
-      Alert.alert('Validation Error', 'Please enter your password!');
-      return;
-    }
-    if (password.length < 6) {
-      Alert.alert('Weak Password', 'Password must be at least 6 characters!');
+  }, [auth?.data]);
+
+  const handleLogin = () => {
+    if (auth.isLoading) {
       return;
     }
 
-    setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      Alert.alert('Login Success', `Welcome ${emailAdd.split('@')[0]}!`);
-      // TODO: Update isSignedIn state and navigate to MainStack
-    }, 1500);
+    if (username.trim() === '' || password.trim() === '') {
+      Alert.alert('Validation Error', 'Please enter both username and password!');
+      return;
+    }
+
+    dispatch(
+      authLogin({
+        username: username.trim(),
+        password,
+      }),
+    );
   };
 
   const handleForgotPassword = () => {
     Alert.alert('Forgot Password', 'Password reset link will be sent to your email.');
   };
 
+  const handleAnimatedLogin = () => {
+    Animated.sequence([
+      Animated.timing(shakeAnimation, { toValue: 12, duration: 60, useNativeDriver: true }),
+      Animated.timing(shakeAnimation, { toValue: -12, duration: 60, useNativeDriver: true }),
+      Animated.timing(shakeAnimation, { toValue: 10, duration: 60, useNativeDriver: true }),
+      Animated.timing(shakeAnimation, { toValue: -10, duration: 60, useNativeDriver: true }),
+      Animated.timing(shakeAnimation, { toValue: 6, duration: 60, useNativeDriver: true }),
+      Animated.timing(shakeAnimation, { toValue: 0, duration: 60, useNativeDriver: true }),
+    ]).start();
+
+    handleLogin();
+  };
+
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.headerSection}>
         <View style={styles.logoContainer}>
-          <Image
-            source={{ uri: IMG.LOGO3 }}
-            style={styles.logo}
-          />
+          <OfflineLogo label="A" size={80} />
         </View>
         <Text style={styles.titleText}>Welcome Back!</Text>
-        <Text style={styles.subtitleText}>Sign in to yourt account</Text>
+        <Text style={styles.subtitleText}>Sign in to your account</Text>
       </View>
 
       <View style={styles.formContainer}>
         <CustomTextInput
-          label="Email Address"
-          placeholder="your@email.com"
-          value={emailAdd}
-          onChangeText={setEmailAdd}
+          label="Username"
+          placeholder="Enter your username"
+          value={username}
+          onChangeText={setUsername}
+          autoCapitalize="none"
+          autoCorrect={false}
           containerStyle={styles.inputContainer}
           labelStyle={styles.label}
           textStyle={styles.input}
@@ -75,14 +90,14 @@ const Login = () => {
             placeholder="Enter your password"
             value={password}
             onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+            autoCapitalize="none"
+            autoCorrect={false}
             containerStyle={styles.inputContainer}
             labelStyle={styles.label}
             textStyle={styles.input}
           />
-          <TouchableOpacity 
-            style={styles.eyeIcon}
-            onPress={() => setShowPassword(!showPassword)}
-          >
+          <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowPassword(!showPassword)}>
             <Text style={styles.eyeText}>{showPassword ? '👁️' : '👁️‍🗨️'}</Text>
           </TouchableOpacity>
         </View>
@@ -92,26 +107,35 @@ const Login = () => {
         </TouchableOpacity>
       </View>
 
-      <CustomButton
-        label={isLoading ? 'LOGGING IN...' : 'LOGIN'}
-        onPress={handleLogin}
-        containerStyle={[styles.button, isLoading && { opacity: 0.7 }]}
-        textStyle={styles.buttonText}
-      />
+      <Animated.View
+        style={[
+          styles.buttonWrapper,
+          {
+            transform: [{ translateX: shakeAnimation }],
+          },
+        ]}
+      >
+        <CustomButton
+          label={auth.isLoading ? 'LOGGING IN...' : 'LOGIN'}
+          onPress={handleAnimatedLogin}
+          containerStyle={[styles.button, auth.isLoading && styles.buttonDisabled]}
+          textStyle={styles.buttonText}
+        />
+      </Animated.View>
 
-      <View style={styles.dividerContainer}>
-        <View style={styles.divider} />
-        <Text style={styles.dividerText}>New User?</Text>
-        <View style={styles.divider} />
-      </View>
+      {/* <SimpleButton
+        title="Test Me"
+        onPress={() =>alert('Hello') }
+      /> */}
 
-      <View style={styles.registerContainer}>
-        <Text style={styles.registerText}>Don't have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate(ROUTES.REGISTER)}>
-          <Text style={styles.registerLink}>Create one now</Text>
-        </TouchableOpacity>
-      </View>
-
+      // {/* Old login button reference
+      // <CustomButton
+      //   label={isLoading ? 'LOGGING IN...' : 'LOGIN'}
+      //   onPress={handleLogin}
+      //   containerStyle={[styles.button, isLoading && styles.buttonDisabled]}
+      //   textStyle={styles.buttonText}
+      // />
+      // */}
       <View style={styles.footerContainer}>
         <Text style={styles.footerText}>By signing in, you agree to our Terms & Conditions</Text>
       </View>
@@ -140,11 +164,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderWidth: 2,
     borderColor: COLORS.primary,
-  },
-  logo: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
   },
   titleText: {
     ...TYPOGRAPHY.h1,
@@ -209,43 +228,17 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
   },
+  buttonWrapper: {
+    width: '100%',
+  },
+  buttonDisabled: {
+    opacity: 0.7,
+  },
   buttonText: {
     ...TYPOGRAPHY.body,
     color: COLORS.white,
     fontWeight: '700',
     textAlign: 'center',
-  },
-  dividerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 20,
-    marginVertical: 20,
-  },
-  divider: {
-    flex: 1,
-    height: 1,
-    backgroundColor: COLORS.lightGray,
-  },
-  dividerText: {
-    ...TYPOGRAPHY.caption,
-    color: COLORS.gray,
-    marginHorizontal: 10,
-  },
-  registerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: 20,
-    marginBottom: 20,
-  },
-  registerText: {
-    ...TYPOGRAPHY.body,
-    color: COLORS.black,
-  },
-  registerLink: {
-    ...TYPOGRAPHY.body,
-    color: COLORS.primary,
-    fontWeight: '700',
   },
   footerContainer: {
     paddingHorizontal: 20,

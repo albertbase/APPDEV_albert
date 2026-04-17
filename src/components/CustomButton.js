@@ -1,12 +1,19 @@
+import React from 'react';
 import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 
 const CustomButton = ({ containerStyle, label, textStyle, onPress }) => {
-  const { width, height } = Dimensions.get('window');
+  const { width } = Dimensions.get('window');
 
   return (
     <View style={containerStyle}>
-      <TouchableOpacity onPress={onPress}>
-        <View style={{ padding: width * 0.014 }}>
+      <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: width * 0.04, // responsive padding
+          }}
+        >
           <Text style={textStyle}>{label}</Text>
         </View>
       </TouchableOpacity>
