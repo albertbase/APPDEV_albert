@@ -7,4 +7,4 @@ export const COLORS = {
   lightGray: '#F0F0F0',
   error: '#FF3B30',
   success: '#34C759',
-};
+} as const;

@@ -1,9 +1,21 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 
 import { COLORS, TYPOGRAPHY } from '../styles';
 
-const OfflineLogo = ({ label = 'APP', size = 96, style }) => {
+interface OfflineLogoProps {
+  label?: string;
+  size?: number;
+  style?: StyleProp<ViewStyle>;
+}
+
+const OfflineLogo = ({ label = 'APP', size = 96, style }: OfflineLogoProps) => {
   const borderRadius = size / 2;
 
   return (

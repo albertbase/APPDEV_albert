@@ -1,12 +1,25 @@
 import { useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
 import { CustomButton, CustomTextInput, OfflineLogo } from '../../components';
 import { COLORS, TYPOGRAPHY } from '../../styles';
 import { ROUTES } from '../../util';
 
+import type { RootStackParamList } from '../../navigations/types';
+
+type RegisterNavigation = NativeStackNavigationProp<RootStackParamList>;
+
 const Register = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<RegisterNavigation>();
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -52,7 +65,6 @@ const Register = () => {
     }
 
     setIsLoading(true);
-    // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
       Alert.alert('Registration Success', `Welcome ${fullName}! You can now login.`, [
@@ -87,6 +99,8 @@ const Register = () => {
           placeholder="your@email.com"
           value={email}
           onChangeText={setEmail}
+          autoCapitalize="none"
+          autoCorrect={false}
           containerStyle={styles.inputContainer}
           labelStyle={styles.label}
           textStyle={styles.input}
@@ -98,12 +112,15 @@ const Register = () => {
             placeholder="Enter password"
             value={password}
             onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+            autoCapitalize="none"
+            autoCorrect={false}
             containerStyle={styles.inputContainer}
             labelStyle={styles.label}
             textStyle={styles.input}
           />
           <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowPassword(!showPassword)}>
-            <Text style={styles.eyeText}>{showPassword ? '👁️' : '👁️‍🗨️'}</Text>
+            <Text style={styles.eyeText}>{showPassword ? 'Hide' : 'Show'}</Text>
           </TouchableOpacity>
         </View>
 
@@ -113,12 +130,18 @@ const Register = () => {
             placeholder="Re-enter password"
             value={confirmPassword}
             onChangeText={setConfirmPassword}
+            secureTextEntry={!showConfirmPassword}
+            autoCapitalize="none"
+            autoCorrect={false}
             containerStyle={styles.inputContainer}
             labelStyle={styles.label}
             textStyle={styles.input}
           />
-          <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
-            <Text style={styles.eyeText}>{showConfirmPassword ? '👁️' : '👁️‍🗨️'}</Text>
+          <TouchableOpacity
+            style={styles.eyeIcon}
+            onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+          >
+            <Text style={styles.eyeText}>{showConfirmPassword ? 'Hide' : 'Show'}</Text>
           </TouchableOpacity>
         </View>
 
@@ -127,9 +150,9 @@ const Register = () => {
             style={[styles.checkbox, agreeTerms && styles.checkboxChecked]}
             onPress={() => setAgreeTerms(!agreeTerms)}
           >
-            {agreeTerms && <Text style={styles.checkmark}>✓</Text>}
+            {agreeTerms && <Text style={styles.checkmark}>V</Text>}
           </TouchableOpacity>
-          <View style={{ flex: 1, marginLeft: 10 }}>
+          <View style={styles.termsTextContainer}>
             <Text style={styles.termsText}>
               I agree to the <Text style={styles.termsLink}>Terms & Conditions</Text> and{' '}
               <Text style={styles.termsLink}>Privacy Policy</Text>
@@ -161,27 +184,99 @@ const Register = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.white },
-  headerSection: { paddingHorizontal: 20, paddingTop: 30, paddingBottom: 20, alignItems: 'center' },
-  logoContainer: { width: 100, height: 100, borderRadius: 50, backgroundColor: COLORS.lightGray, justifyContent: 'center', alignItems: 'center', marginBottom: 20, borderWidth: 2, borderColor: COLORS.primary },
-  logo: { width: 80, height: 80, borderRadius: 40 },
-  titleText: { ...TYPOGRAPHY.h1, color: COLORS.primary, fontWeight: '700', marginBottom: 8 },
+  headerSection: {
+    paddingHorizontal: 20,
+    paddingTop: 30,
+    paddingBottom: 20,
+    alignItems: 'center',
+  },
+  logoContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: COLORS.lightGray,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    borderWidth: 2,
+    borderColor: COLORS.primary,
+  },
+  titleText: {
+    ...TYPOGRAPHY.h1,
+    color: COLORS.primary,
+    fontWeight: '700',
+    marginBottom: 8,
+  },
   subtitleText: { ...TYPOGRAPHY.body, color: COLORS.gray, textAlign: 'center' },
   formContainer: { paddingHorizontal: 20, marginBottom: 15 },
   inputContainer: { marginBottom: 18 },
-  label: { ...TYPOGRAPHY.body, color: COLORS.black, fontWeight: '600', marginBottom: 8 },
-  input: { ...TYPOGRAPHY.body, color: COLORS.black, paddingVertical: 12, paddingHorizontal: 12, borderColor: COLORS.lightGray, borderBottomWidth: 2, borderRadius: 4 },
+  label: {
+    ...TYPOGRAPHY.body,
+    color: COLORS.black,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  input: {
+    ...TYPOGRAPHY.body,
+    color: COLORS.black,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    borderColor: COLORS.lightGray,
+    borderBottomWidth: 2,
+    borderRadius: 4,
+  },
   passwordContainer: { position: 'relative' },
   eyeIcon: { position: 'absolute', right: 12, bottom: 15 },
-  eyeText: { fontSize: 18 },
-  termsContainer: { flexDirection: 'row', paddingHorizontal: 20, marginBottom: 20, alignItems: 'flex-start' },
-  checkbox: { width: 24, height: 24, borderRadius: 4, borderWidth: 2, borderColor: COLORS.gray, justifyContent: 'center', alignItems: 'center' },
+  eyeText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: COLORS.primary,
+  },
+  termsContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    marginBottom: 20,
+    alignItems: 'flex-start',
+  },
+  termsTextContainer: { flex: 1, marginLeft: 10 },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: COLORS.gray,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   checkboxChecked: { backgroundColor: COLORS.primary, borderColor: COLORS.success },
-  checkmark: { color: COLORS.white, fontWeight: '700', fontSize: 16 },
+  checkmark: { color: COLORS.white, fontWeight: '700', fontSize: 14 },
   termsText: { ...TYPOGRAPHY.caption, color: COLORS.black, lineHeight: 20 },
   termsLink: { color: COLORS.primary, fontWeight: '600' },
-  button: { backgroundColor: COLORS.primary, paddingVertical: 14, borderRadius: 8, marginHorizontal: 20, marginVertical: 15, shadowColor: COLORS.success, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 5 },
-  buttonText: { ...TYPOGRAPHY.body, color: COLORS.white, fontWeight: '700', textAlign: 'center' },
-  loginContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginHorizontal: 20, marginBottom: 20 },
+  button: {
+    backgroundColor: COLORS.primary,
+    paddingVertical: 14,
+    borderRadius: 8,
+    marginHorizontal: 20,
+    marginVertical: 15,
+    shadowColor: COLORS.success,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  buttonText: {
+    ...TYPOGRAPHY.body,
+    color: COLORS.white,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  loginContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 20,
+    marginBottom: 20,
+  },
   loginText: { ...TYPOGRAPHY.body, color: COLORS.black },
   loginLink: { ...TYPOGRAPHY.body, color: COLORS.primary, fontWeight: '700' },
   footerContainer: { paddingHorizontal: 20, paddingBottom: 30, alignItems: 'center' },

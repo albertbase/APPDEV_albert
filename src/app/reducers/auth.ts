@@ -1,6 +1,13 @@
-import { USER_LOGIN_REQUEST, USER_LOGIN_COMPLETE, USER_LOGIN_ERROR, RESET_USER_LOGIN } from "../actions";
+import {
+  RESET_USER_LOGIN,
+  USER_LOGIN_COMPLETE,
+  USER_LOGIN_ERROR,
+  USER_LOGIN_REQUEST,
+  type AuthAction,
+  type AuthState,
+} from '../actions';
 
-const INITIALSTATE = {
+const INITIAL_STATE: AuthState = {
   data: null,
   isAuthenticated: false,
   isLoading: false,
@@ -8,8 +15,10 @@ const INITIALSTATE = {
   error: null,
 };
 
-export default function reducer(state = INITIALSTATE, action) {
-  console.log(action.type);
+const reducer = (
+  state: AuthState = INITIAL_STATE,
+  action: AuthAction,
+): AuthState => {
   switch (action.type) {
     case USER_LOGIN_REQUEST:
       return {
@@ -24,7 +33,7 @@ export default function reducer(state = INITIALSTATE, action) {
     case USER_LOGIN_COMPLETE:
       return {
         ...state,
-        data: action.payload || null,
+        data: action.payload ?? null,
         isAuthenticated: true,
         isLoading: false,
         isError: false,
@@ -38,13 +47,15 @@ export default function reducer(state = INITIALSTATE, action) {
         isAuthenticated: false,
         isLoading: false,
         isError: true,
-        error: action.error || 'Login failed',
+        error: action.error ?? 'Login failed',
       };
 
     case RESET_USER_LOGIN:
-      return INITIALSTATE;
+      return INITIAL_STATE;
 
     default:
       return state;
   }
-}
+};
+
+export default reducer;

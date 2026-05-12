@@ -1,22 +1,26 @@
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StyleSheet, Text, View } from 'react-native';
+import type { Dispatch } from 'redux';
+import { useDispatch } from 'react-redux';
+
+import { authLogout, type AuthAction } from '../app/actions';
 import { CustomButton, OfflineLogo } from '../components';
+import type { RootStackParamList } from '../navigations/types';
 import { COLORS, TYPOGRAPHY } from '../styles';
 import { ROUTES } from '../util';
-import { authLogout } from '../app/actions';
+
+type HomeScreenNavigation = NativeStackNavigationProp<RootStackParamList>;
 
 const HomeScreen = () => {
-  const navigation = useNavigation();
-  const dispatch = useDispatch();
+  const navigation = useNavigation<HomeScreenNavigation>();
+  const dispatch = useDispatch<Dispatch<AuthAction>>();
 
   return (
     <View style={styles.container}>
       <OfflineLogo label="HOME" size={200} style={styles.image} />
 
       <Text style={styles.title}>HomeScreen</Text>
-
-
 
       <CustomButton
         label="GO TO PROFILE"
@@ -47,26 +51,12 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     marginBottom: 20,
-    borderRadius:  100,
+    borderRadius: 100,
   },
   title: {
     ...TYPOGRAPHY.h2,
     color: COLORS.black,
     marginBottom: 30,
-  },
-  label: {
-    ...TYPOGRAPHY.body,
-    color: COLORS.black,
-    marginBottom: 8,
-  },
-  input: {
-    ...TYPOGRAPHY.body,
-    color: COLORS.black,
-    paddingVertical: 8,
-  },
-  inputContainer: {
-    marginBottom: 20,
-    width: '100%',
   },
   button: {
     backgroundColor: COLORS.success,

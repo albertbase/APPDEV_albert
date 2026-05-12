@@ -1,8 +1,16 @@
 import { Dimensions } from 'react-native';
+import type { TextStyle } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
-export const TYPOGRAPHY = {
+type TypographyScale = {
+  h1: TextStyle;
+  h2: TextStyle;
+  body: TextStyle;
+  caption: TextStyle;
+};
+
+export const TYPOGRAPHY: TypographyScale = {
   h1: {
     fontSize: width * 0.08,
     fontWeight: '700',

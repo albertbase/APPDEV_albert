@@ -15,14 +15,16 @@ import ProfileScreen from '../screens/ProfileScreen';
 // utils
 import { ROUTES } from '../util';
 
-const Stack = createNativeStackNavigator();
+import type { RootState } from '../app/reducers';
+import type { RootStackParamList } from './types';
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 // --- Auth Stack ---
 const AuthStack = () => (
   <Stack.Navigator
     screenOptions={{
       headerShown: false,
-      animationEnabled: true,
     }}
   >
     <Stack.Screen
@@ -44,7 +46,6 @@ const MainStack = () => (
     initialRouteName={ROUTES.HOME}
     screenOptions={{
       headerShown: true,
-      animationEnabled: true,
     }}
   >
     <Stack.Screen
@@ -63,12 +64,12 @@ const MainStack = () => (
 // --- Root Navigator ---
 const AppNav = () => {
   const isDarkMode = useColorScheme() === 'dark';
-  const auth = useSelector(state => state.auth);
+  const auth = useSelector((state: RootState) => state.auth);
   const isLoggedIn = !!auth?.isAuthenticated;
 
   useEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBarStyle('dark-content', true);
+      StatusBar.setBarStyle(isDarkMode ? 'light-content' : 'dark-content', true);
     }
   }, [isDarkMode]);
 

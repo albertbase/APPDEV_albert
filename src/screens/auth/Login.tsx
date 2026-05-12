@@ -1,22 +1,34 @@
 import { useEffect, useRef, useState } from 'react';
-import { Alert, Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Alert,
+  Animated,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import type { Dispatch } from 'redux';
 import { useDispatch, useSelector } from 'react-redux';
-import { CustomButton, CustomTextInput, OfflineLogo, SimpleButton } from '../../components';
+
+import { CustomButton, CustomTextInput, OfflineLogo } from '../../components';
+import { authLogin, type AuthAction } from '../../app/actions';
 import { COLORS, TYPOGRAPHY } from '../../styles';
-import { authLogin } from '../../app/actions';
+
+import type { RootState } from '../../app/reducers';
 
 const Login = () => {
-  const dispatch = useDispatch();
-  const auth = useSelector(state => state.auth);
+  const dispatch = useDispatch<Dispatch<AuthAction>>();
+  const auth = useSelector((state: RootState) => state.auth);
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const shakeAnimation = useRef(new Animated.Value(0)).current;
+  const shakeAnimation = useRef<Animated.Value>(new Animated.Value(0)).current;
 
   useEffect(() => {
     if (!auth.isLoading && auth.isError && auth.error) {
-      Alert.alert('Login failed', auth.error);
+      Alert.alert('Login failed', auth.error ?? 'Login failed');
     }
   }, [auth.isLoading, auth.isError, auth.error]);
 
@@ -98,7 +110,7 @@ const Login = () => {
             textStyle={styles.input}
           />
           <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowPassword(!showPassword)}>
-            <Text style={styles.eyeText}>{showPassword ? '👁️' : '👁️‍🗨️'}</Text>
+            <Text style={styles.eyeText}>{showPassword ? 'Hide' : 'Show'}</Text>
           </TouchableOpacity>
         </View>
 
@@ -123,19 +135,6 @@ const Login = () => {
         />
       </Animated.View>
 
-      {/* <SimpleButton
-        title="Test Me"
-        onPress={() =>alert('Hello') }
-      /> */}
-
-      // {/* Old login button reference
-      // <CustomButton
-      //   label={isLoading ? 'LOGGING IN...' : 'LOGIN'}
-      //   onPress={handleLogin}
-      //   containerStyle={[styles.button, isLoading && styles.buttonDisabled]}
-      //   textStyle={styles.buttonText}
-      // />
-      // */}
       <View style={styles.footerContainer}>
         <Text style={styles.footerText}>By signing in, you agree to our Terms & Conditions</Text>
       </View>
@@ -207,7 +206,9 @@ const styles = StyleSheet.create({
     bottom: 15,
   },
   eyeText: {
-    fontSize: 18,
+    fontSize: 12,
+    fontWeight: '600',
+    color: COLORS.primary,
   },
   forgotPassword: {
     ...TYPOGRAPHY.body,

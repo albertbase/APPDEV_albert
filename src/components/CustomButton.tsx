@@ -1,7 +1,27 @@
 import React from 'react';
-import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Dimensions,
+  Text,
+  TouchableOpacity,
+  View,
+  type StyleProp,
+  type TextStyle,
+  type ViewStyle,
+} from 'react-native';
 
-const CustomButton = ({ containerStyle, label, textStyle, onPress }) => {
+interface CustomButtonProps {
+  containerStyle?: StyleProp<ViewStyle>;
+  label: string;
+  textStyle?: StyleProp<TextStyle>;
+  onPress: () => void;
+}
+
+const CustomButton = ({
+  containerStyle,
+  label,
+  textStyle,
+  onPress,
+}: CustomButtonProps) => {
   const { width } = Dimensions.get('window');
 
   return (
